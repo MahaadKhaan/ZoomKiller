@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zoom Killer Desktop</title>
+    <script src="/eel.js"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="icon.ico">
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ffd900",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#23200f",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                    animation: {
+                        'bounce-slow': 'bounce 3s infinite',
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body { font-family: 'Manrope', sans-serif; overflow-x: hidden; }
+        .glow-button { box-shadow: 0 0 20px rgba(255, 217, 0, 0.4); transition: all 0.3s ease; }
+        .glow-button:hover { box-shadow: 0 0 30px rgba(255, 217, 0, 0.6); transform: translateY(-1px); }
+        .neo-shadow { box-shadow: 8px 8px 16px rgba(0,0,0,0.05), -8px -8px 16px rgba(255,255,255,0.8); }
+        
+        /* Smooth Transitions */
+        .screen { transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out; }
+        .screen.hidden-screen { opacity: 0; pointer-events: none; position: absolute; top: 0; left: 0; width: 100%; transform: scale(0.98); z-index: -1; }
+        .screen.active-screen { opacity: 1; pointer-events: auto; position: relative; transform: scale(1); z-index: 10; }
+        
+        /* Staggered Element Animations */
+        .animate-up { opacity: 0; transform: translateY(20px); transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
+        .animate-up.show { opacity: 1; transform: translateY(0); }
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+        .delay-400 { transition-delay: 400ms; }
+        
+        /* Stop number input arrows */
+        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 h-screen w-screen overflow-hidden font-display">
+
+    <!-- SPLASH SCREEN BOOT SEQUENCE -->
+    <div id="splash-screen" class="fixed inset-0 z-[200] bg-slate-900 flex flex-col items-center justify-center h-screen w-screen transition-opacity duration-1000">
+        <div class="flex items-center gap-3 mb-8 animate-pulse">
+            <img src="logo.png" alt="Logo" class="size-16 object-contain">
+            <h1 class="text-4xl font-black text-white tracking-tighter">Zoom<span class="text-primary">Killer</span></h1>
+        </div>
+        <!-- Tailwind CSS loading spinner -->
+        <div class="w-12 h-12 border-4 border-slate-700 border-t-primary rounded-full animate-spin"></div>
+        <p class="text-xs font-bold text-slate-500 mt-6 uppercase tracking-widest">Initializing Core Modules...</p>
+    </div>
+
+    <!-- WELCOME SCREEN -->
+    <div id="welcome-screen" class="screen hidden-screen h-full w-full flex-col">
+        <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+            <div class="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full bg-primary/10 blur-[120px]"></div>
+            <div class="absolute top-[20%] -right-[5%] w-[30%] h-[30%] rounded-full bg-primary/5 blur-[100px]"></div>
+        </div>
+        <div class="layout-container relative z-10 flex h-full grow flex-col">
+            <header class="animate-up flex items-center justify-between whitespace-nowrap px-6 py-4 lg:px-20 shrink-0">
+                <div class="flex items-center gap-2.5">
+                    <img src="logo.png" alt="Zoom Killer Logo" class="h-10 w-auto object-contain">
+                    <h2 class="text-2xl font-extrabold tracking-tight">ZOOM KILLER</h2>
+                </div>
+            </header>
+            <main class="flex flex-1 flex-col items-center justify-center px-6 py-4 lg:py-8 text-center relative overflow-hidden">
+                <div class="max-w-4xl mx-auto flex flex-col items-center gap-6 lg:gap-8 z-10">
+                    <h1 class="animate-up delay-100 text-5xl md:text-6xl lg:text-7xl font-black leading-[1.1] tracking-tight">
+                        Welcome to Automated <br/>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-yellow-500 to-primary/80">Student Life</span>
+                    </h1>
+                    <p class="animate-up delay-200 text-slate-600 dark:text-slate-400 text-lg md:text-xl font-medium max-w-2xl leading-relaxed">
+                        Effortless Zoom, Tasks, and Focus. Zoom Killer handles the administrative chaos of college so you can focus on mastering your craft.
+                    </p>
+                    <div class="animate-up delay-300 flex flex-col sm:flex-row gap-4 mt-4">
+                        <button id="btn-get-started" class="glow-button flex min-w-[200px] cursor-pointer items-center justify-center rounded-xl h-16 px-10 bg-primary text-background-dark text-lg font-extrabold tracking-tight">Get Started</button>
+                    </div>
+            </main>
+        </div>
+        
+        <!-- Mock Below the fold content to justify scroll indicator -->
+        <div class="min-h-screen bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 p-20 flex items-center justify-center relative z-10">
+            <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div class="animate-up p-8 rounded-2xl bg-slate-50 dark:bg-slate-800 text-center space-y-4">
+                    <div class="size-16 mx-auto bg-primary/20 rounded-full flex items-center justify-center text-primary"><span class="material-symbols-outlined text-3xl">all_inclusive</span></div>
+                    <h3 class="font-bold text-xl">The Ghost Loop</h3>
+                    <p class="text-slate-500">Auto-rejoin 40-minute zoom calls without lifting a finger.</p>
+                </div>
+                <div class="animate-up delay-100 p-8 rounded-2xl bg-slate-50 dark:bg-slate-800 text-center space-y-4">
+                    <div class="size-16 mx-auto bg-primary/20 rounded-full flex items-center justify-center text-primary"><span class="material-symbols-outlined text-3xl">school</span></div>
+                    <h3 class="font-bold text-xl">Classroom Sync</h3>
+                    <p class="text-slate-500">Your Google assignments pulled directly to your desktop.</p>
+                </div>
+                <div class="animate-up delay-200 p-8 rounded-2xl bg-slate-50 dark:bg-slate-800 text-center space-y-4">
+                    <div class="size-16 mx-auto bg-primary/20 rounded-full flex items-center justify-center text-primary"><span class="material-symbols-outlined text-3xl">timer</span></div>
+                    <h3 class="font-bold text-xl">Deep Focus</h3>
+                    <p class="text-slate-500">Pomodoro timers to keep you out of the distraction zone.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGIN SCREEN -->
+    <div id="login-screen" class="screen hidden-screen min-h-screen w-full flex">
+        <div class="flex flex-col w-full lg:w-1/2 p-8 lg:p-16 justify-center items-center">
+            <div class="animate-up max-w-md w-full space-y-8">
+                <div class="flex items-center gap-3 mb-12">
+                    <img src="logo.png" alt="Zoom Killer Logo" class="h-10 w-auto object-contain">
+                    <span class="text-2xl font-extrabold tracking-tight">ZOOM KILLER</span>
+                </div>
+                <div class="space-y-2">
+                    <h1 class="text-4xl font-black tracking-tight">Sign In</h1>
+                    <p class="text-slate-500 font-medium">Please connect your actual Google Classroom account so we can fetch your homework.</p>
+                </div>
+                <!-- Google Auth -->
+                <button id="btn-google-signin" class="w-full neo-shadow bg-white dark:bg-slate-800 flex items-center justify-center gap-3 py-4 rounded-xl font-semibold border hover:scale-[1.01] transition-transform text-slate-800 dark:text-slate-100">
+                    <svg class="size-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"></path>
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
+                    </svg>
+                    Continue with Google
+                </button>
+            </div>
+        </div>
+        <div class="hidden lg:flex w-1/2 relative bg-primary items-center justify-center p-12 overflow-hidden text-center text-slate-900">
+            <h2 class="animate-up delay-200 text-5xl font-black z-10 leading-tight">Your assignments,<br/>unified.</h2>
+        </div>
+    </div>
+
+    <!-- DASHBOARD SCREEN -->
+    <div id="dashboard-screen" class="screen hidden-screen layout-container h-screen w-screen overflow-hidden flex flex-col">
+        <header class="animate-up flex justify-between items-center border-b border-primary/10 px-6 py-4 relative z-50">
+            <div class="flex items-center gap-3">
+                <img src="logo.png" alt="Zoom Killer Logo" class="h-9 w-auto object-contain">
+                <h2 class="text-xl font-black">Zoom Killer</h2>
+            </div>
+            <div class="flex items-center gap-4 relative">
+                <span id="user-display-name" class="text-sm font-bold">User</span>
+                <!-- Avatar triggers modal -->
+                <button id="btn-avatar-modal" class="size-10 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center hover:ring-2 hover:ring-primary transition-all overflow-hidden relative">
+                    <img id="dashboard-user-avatar" src="" class="absolute inset-0 w-full h-full object-cover hidden" alt="Avatar">
+                    <span id="dashboard-user-icon" class="material-symbols-outlined text-slate-500">person</span>
+                </button>
+                <!-- Profile Modal -->
+                <div id="profile-modal" class="hidden absolute top-14 right-0 w-64 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 p-4 z-50">
+                    <div class="pb-3 mb-3 border-b border-slate-100 dark:border-slate-700">
+                        <p class="text-sm font-bold" id="modal-user-name">User Name</p>
+                        <p class="text-xs text-slate-500">Student Account</p>
+                    </div>
+                    <button id="btn-settings" class="w-full text-left px-3 py-2 text-sm font-bold hover:bg-slate-50 dark:hover:bg-slate-700 rounded-lg transition-colors flex items-center gap-2"><span class="material-symbols-outlined text-sm">settings</span> Settings</button>
+                    <button id="btn-logout" class="w-full text-left px-3 py-2 text-sm font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors mt-1 flex items-center gap-2"><span class="material-symbols-outlined text-sm">logout</span> Logout</button>
+                </div>
+            </div>
+        </header>
+        <main class="flex-1 flex flex-col p-6 lg:p-10 max-w-[1600px] mx-auto w-full h-full overflow-hidden">
+            <div class="animate-up delay-100 mb-6 shrink-0"><h1 class="text-4xl font-black">Focus Dashboard</h1></div>
+            <div class="flex-1 flex flex-col lg:flex-row gap-6 lg:gap-8 overflow-hidden min-h-0 w-full">
+                <!-- Ghost Loop -->
+                <div class="animate-up delay-200 flex-1 flex flex-col min-h-0 h-full">
+                    <div class="bg-white dark:bg-slate-900/50 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm relative h-full flex flex-col">
+                        <div class="flex items-center gap-3 mb-6"><span class="material-symbols-outlined text-primary text-3xl">all_inclusive</span><h3 class="text-xl font-bold">The Ghost Loop</h3>
+                            <div id="looper-status" class="hidden absolute top-6 right-6 flex items-center gap-2"><span class="size-2 bg-green-500 rounded-full animate-pulse"></span><span class="text-xs font-bold text-green-500 uppercase">Active</span></div>
+                        </div>
+                        <div class="space-y-4">
+                            <input id="zoom-url" class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-lg p-4 font-medium" placeholder="https://zoom.us/j/12345" type="text" value="https://zoom.us/j/12345">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div><p class="text-xs font-bold text-slate-500 mb-1 ml-1 uppercase">Start</p><input id="zoom-start" class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-lg p-3 font-medium" type="time"></div>
+                                <div><p class="text-xs font-bold text-slate-500 mb-1 ml-1 uppercase">End</p><input id="zoom-end" class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-lg p-3 font-medium" type="time"></div>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-slate-500 mb-1 ml-1 uppercase">Loop Interval (Minutes)</p>
+                                <input id="zoom-interval" class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-lg p-3 font-medium" type="number" value="40" min="1">
+                            </div>
+                            <button id="btn-toggle-looper" class="w-full bg-primary hover:bg-primary/90 text-background-dark font-black py-4 rounded-xl flex items-center justify-center gap-2 transition-colors mt-6"><span class="material-symbols-outlined">play_circle</span><span id="looper-btn-text">Activate Looper</span></button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Focus Mode -->
+                <div class="animate-up delay-300 flex-1 flex flex-col items-center justify-between bg-white dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-800 p-4 lg:p-6 relative overflow-hidden h-full min-h-0">
+                    <div class="w-full flex items-center justify-start gap-2 mb-2 shrink-0">
+                        <span id="focus-pulse" class="size-2 bg-primary rounded-full hidden animate-pulse"></span>
+                        <span class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-slate-400">Deep Work Session</span>
+                    </div>
+                    <div class="relative flex-1 flex items-center justify-center w-full min-h-0">
+                        <svg class="h-full max-h-[16rem] w-full transform -rotate-90" viewBox="0 0 100 100">
+                            <circle class="text-slate-100 dark:text-slate-800" cx="50" cy="50" fill="transparent" r="45" stroke="currentColor" stroke-width="4"></circle>
+                            <circle id="timer-ring" class="text-primary transition-all duration-1000 ease-linear" cx="50" cy="50" fill="transparent" r="45" stroke="currentColor" stroke-dasharray="283" stroke-dashoffset="0" stroke-linecap="round" stroke-width="6"></circle>
+                        </svg>
+                        <div class="absolute flex flex-col items-center w-full px-10">
+                            <!-- Dynamic Timer Input/Display -->
+                            <div class="flex items-center justify-center gap-1 group">
+                                <input type="number" id="timer-input-m" value="25" min="1" max="120" class="w-16 bg-transparent border-none text-right text-4xl lg:text-5xl font-black p-0 focus:ring-0 focus:outline-none focus:text-primary transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg cursor-pointer">
+                                <span class="text-4xl lg:text-5xl font-black pb-1 text-slate-300 dark:text-slate-700">:</span>
+                                <span id="timer-display-s" class="w-16 text-left text-4xl lg:text-5xl font-black">00</span>
+                            </div>
+                            <span class="text-slate-500 text-[10px] font-medium mt-1">Click to edit</span>
+                        </div>
+                    </div>
+                    <div class="w-full flex-col gap-3 shrink-0 mt-2 relative z-10 flex">
+                        <div class="flex gap-4 w-full">
+                            <button id="btn-timer-reset" class="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 font-bold py-2 sm:py-3 rounded-xl transition-all text-sm sm:text-base">Reset</button>
+                            <button id="btn-timer-toggle" class="flex-[2] bg-primary text-background-dark font-black py-2 sm:py-3 rounded-xl shadow-lg shadow-primary/20 transition-all text-sm sm:text-base cursor-pointer">Start Session</button>
+                        </div>
+                        <div class="flex items-center justify-between w-full mt-3 pt-3 border-t border-slate-200 dark:border-slate-800">
+                            <label class="text-[10px] sm:text-xs font-bold text-slate-500 uppercase">Set Timer Default (mins)</label>
+                            <input type="number" id="dashboard-timer-default" class="w-16 sm:w-20 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-1.5 font-medium outline-none focus:ring-2 focus:ring-primary text-center text-sm" value="25" min="1" max="120">
+                        </div>
+                    </div>
+                </div>
+                <!-- Tasks Column -->
+                <div class="animate-up delay-400 flex-1 flex flex-col gap-6 h-full min-h-0 overflow-hidden">
+                    <div class="bg-white dark:bg-slate-900/50 rounded-xl border border-slate-200 flex flex-col flex-1 min-h-0 overflow-hidden">
+                        <div class="p-5 border-b flex flex-col gap-4 bg-slate-50/50 dark:bg-slate-800/30">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center gap-3"><div class="size-8 bg-green-500/20 text-green-600 rounded flex items-center justify-center"><span class="material-symbols-outlined">school</span></div><h3 class="font-bold">Google Classroom</h3></div>
+                                <span id="classroom-badge" class="text-xs bg-slate-200 dark:bg-slate-800 px-2 flex items-center justify-center rounded-full font-bold">Syncing...</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <button id="tab-classroom-pending" class="flex-1 py-1.5 text-sm font-bold rounded-md bg-white dark:bg-slate-700 shadow-sm border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-slate-100 transition-colors">Pending</button>
+                                <button id="tab-classroom-missing" class="flex-1 py-1.5 text-sm font-bold rounded-md text-slate-500 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition-colors">Missing</button>
+                            </div>
+                        </div>
+                        <div id="classroom-container" class="p-2 flex-1 overflow-y-auto min-h-0">
+                            <!-- Loading State -->
+                            <div class="flex flex-col items-center justify-center h-full text-slate-400 gap-2 opacity-50 py-10">
+                                <span class="material-symbols-outlined animate-spin">refresh</span>
+                                <span class="text-sm font-bold">Fetching latest assignments...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- SETTINGS MODAL -->
+    <div id="settings-modal" class="hidden fixed inset-0 bg-black/50 z-[100] flex justify-center items-center p-4 screen">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md p-6 shadow-2xl border border-slate-200 dark:border-slate-700 animate-up show delay-100">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-black">Settings</h2>
+                <button id="btn-close-settings" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="text-sm font-bold text-slate-500 mb-1 block">Theme</label>
+                    <select id="theme-selector" class="w-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-3 font-medium outline-none focus:ring-2 focus:ring-primary">
+                        <option value="system">System Default</option>
+                        <option value="dark">Dark Mode</option>
+                        <option value="light">Light Mode</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-sm font-bold text-slate-500 mb-1 block">Google Classroom Account</label>
+                    <div class="flex items-center gap-3 p-3 bg-slate-100 dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700">
+                        <div class="relative size-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center overflow-hidden">
+                            <img id="settings-user-avatar" src="" class="absolute inset-0 w-full h-full object-cover hidden" alt="Avatar">
+                            <span id="settings-user-icon" class="material-symbols-outlined text-sm text-slate-500">person</span>
+                        </div>
+                        <p class="text-sm text-slate-700 dark:text-slate-300 font-medium">Connected as <span id="settings-user-name" class="font-bold">User</span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 flex justify-end">
+                <button id="btn-save-settings" class="bg-primary text-background-dark font-black px-6 py-2 rounded-xl hover:bg-primary/90 transition-colors">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>
