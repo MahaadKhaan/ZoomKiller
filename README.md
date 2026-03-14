@@ -1,4 +1,4 @@
-# 🛡️ Zoom Killer (Crextio)
+# 🛡️ Zoom Killer
 **The Ultimate Automated Student Life Dashboard**
 
 Zoom Killer is a high-performance desktop application designed to eliminate the administrative friction of online learning. It combines OS-level automation with cloud-based academic tracking to help students reclaim their time and focus.
@@ -15,34 +15,35 @@ Zoom Killer is a high-performance desktop application designed to eliminate the 
 
 ## 📦 Installation & Setup
 1. **Clone the repository:**
-   ```bash
-   git clone [https://github.com/MahaadKhaan/ZoomKiller.git](https://github.com/MahaadKhaan/ZoomKiller.git)
-Install dependencies:
+   git clone https://github.com/MahaadKhaan/ZoomKiller.git
 
-Bash
-pip install -r requirements.txt
-Configure Firebase:
+2. **Install dependencies:**
+   pip install -r requirements.txt
 
-Add your credentials to the firebaseConfig object in web/main.js.
+3. **Configure Firebase:**
+   * Add your credentials to the `firebaseConfig` object in `web/main.js`.
 
-📖 Usage Guide & Best Practices
+## 📖 Usage Guide & Best Practices
+
 To ensure the "Ghost Loop" functions autonomously, please follow these configuration steps:
 
-1. Pre-Launch Configuration (Critical)
+### 1. Pre-Launch Configuration (Critical)
 Before activating the looper, you must disable the manual joining prompts in Zoom:
+* **Zoom Setup:** Join a test meeting, uncheck **"Always show this preview when joining"**, and ensure both Audio and Video are disabled as shown below.
+  
+![Zoom Setup Guide](screenshots/zoom_setup.jpg)
 
-Zoom Setup: Join a test meeting, uncheck "Always show this preview when joining", and ensure both Audio and Video are disabled as shown below.
+* **Browser Prompt:** When you open a Zoom link for the first time, check the box **"Always allow..."** so the app can launch meetings without asking for permission.
 
-Browser Prompt: When you open a Zoom link for the first time, check the box "Always allow..." so the app can launch meetings without asking for permission.
+![Browser Prompt Guide](screenshots/browser_prompt.jpg)
 
-2. Understanding the Dashboard
+### 2. Understanding the Dashboard
 Fill in your recurring class details to automate your academic workflow.
+* **URL:** Paste your recurring Zoom link.
+* **Start/End:** Define your class duration.
+* **Interval:** Set to 40 minutes to bypass standard session limits.
 
-URL: Paste your recurring Zoom link.
+![Dashboard Guide](screenshots/dashboard_guide.jpg)
 
-Start/End: Define your class duration.
-
-Interval: Set to 40 minutes to bypass standard session limits.
-
-📄 License
+## 📄 License
 This project is open-source. Feel free to contribute or adapt it for your own academic needs.
